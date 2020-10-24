@@ -48,9 +48,11 @@ OLDSS		= 0x2C
 state	= 0		# these are offsets into the task-struct.
 counter	= 4
 priority = 8
-signal	= 12
-sigaction = 16		# MUST be 16 (=len of sigaction)
-blocked = (33*16)
+
+# modified lab4 important
+signal	= 16
+sigaction = 20		# MUST be 16 (=len of sigaction)
+blocked = (33*16+4)
 
 # offsets within sigaction
 sa_handler = 0
@@ -60,8 +62,9 @@ sa_restorer = 12
 
 nr_system_calls = 72
 
-# lab4
+# add lab4
 KERNEL_STACK = 12
+ESP0 = 4 
 
 /*
  * Ok, I get parallel printer interrupts while using the floppy for some
@@ -70,6 +73,8 @@ KERNEL_STACK = 12
 .globl system_call,sys_fork,timer_interrupt,sys_execve
 .globl hd_interrupt,floppy_interrupt,parallel_interrupt
 .globl device_not_available, coprocessor_error
+
+.globl switch_to, first_return_from_kernel # add lab4
 
 .align 2
 bad_sys_call:
@@ -287,6 +292,7 @@ parallel_interrupt:
 	popl %eax
 	iret
 
+# add lab4
 switch_to:
     pushl %ebp
     movl %esp,%ebp
@@ -299,7 +305,7 @@ switch_to:
 
 #! 切换PCB
 	movl %ebx,%eax
-	xchgl %eax,current
+	xchgl %eax,current # 两个变量交换内容
 
 #! TSS中的内核栈指针的重写
     movl tss,%ecx

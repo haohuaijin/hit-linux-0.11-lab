@@ -35,7 +35,10 @@ extern void trap_init(void);
 #ifndef PANIC
 volatile void panic(const char * str);
 #endif
+
 extern int tty_write(unsigned minor,char * buf,int count);
+extern void switch_to(struct task_struct *pnext, unsigned long ldt); /* add lab4 */
+extern void first_return_from_kernel(void); /* add lab4 */
 
 typedef int (*fn_ptr)();
 
@@ -82,9 +85,7 @@ struct task_struct {
 	long state;	/* -1 unrunnable, 0 runnable, >0 stopped */
 	long counter;
 	long priority;
-
-	long kernelstack;
-	
+	long kernelstack; /* add lab4 */
 	long signal;
 	struct sigaction sigaction[32];
 	long blocked;	/* bitmap of masked signals */
@@ -115,6 +116,7 @@ struct task_struct {
  *  INIT_TASK is used to set up the first task table, touch at
  * your own risk!. Base=0, limit=0x9ffff (=640kB)
  */
+/* add lab4 */
 #define INIT_TASK \
 /* state etc */	{ 0,15,15,PAGE_SIZE+(long)&init_task, \
 /* signals */	0,{{},},0, \
@@ -173,6 +175,7 @@ __asm__("str %%ax\n\t" \
  * This also clears the TS-flag if the task we switched to has used
  * tha math co-processor latest.
  */
+/* add lab4 */
 /*
 #define switch_to(n) {\
 struct {long a,b;} __tmp; \

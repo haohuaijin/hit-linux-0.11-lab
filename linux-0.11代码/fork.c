@@ -74,24 +74,35 @@ int copy_process(int nr,long ebp,long edi,long esi,long gs,long none,
 	struct task_struct *p;
 	int i;
 	struct file *f;
-	// lab4
+
+	/* add lab4 */
 	long *krnstack;
 
 	p = (struct task_struct *) get_free_page();
 	
+	/* add lab4 */
 	krnstack = (long *) (PAGE_SIZE + (long) p);
 	*(--krnstack) = ss & 0xffff;
 	*(--krnstack) = esp;
 	*(--krnstack) = eflags;
 	*(--krnstack) = cs & 0xffff;
 	*(--krnstack) = eip;
+	
+	*(--krnstack) = ds & 0xffff;
+	*(--krnstack) = es & 0xffff;
+	*(--krnstack) = fs & 0xffff;
+	*(--krnstack) = gs & 0xffff;
+	*(--krnstack) = esi;
+	*(--krnstack) = edi;
+	*(--krnstack) = edx;
 
+	*(--krnstack) = (long) first_return_from_kernel; 
 	*(--krnstack) = ebp;
 	*(--krnstack) = ecx;
 	*(--krnstack) = ebx;
 	// 这里的 0 最有意思。
 	*(--krnstack) = 0;
-	*(--krnstack) = (long) first_return_from_kernel; 
+
 
 	if (!p)
 		return -EAGAIN;
@@ -147,7 +158,10 @@ int copy_process(int nr,long ebp,long edi,long esi,long gs,long none,
 	set_tss_desc(gdt+(nr<<1)+FIRST_TSS_ENTRY,&(p->tss));
 	set_ldt_desc(gdt+(nr<<1)+FIRST_LDT_ENTRY,&(p->ldt));
 	p->state = TASK_RUNNING;	/* do this last, just in case */
+	
+	/* add lab4 */	
 	p->kernelstack = krnstack;
+	
 	return last_pid;
 }
 

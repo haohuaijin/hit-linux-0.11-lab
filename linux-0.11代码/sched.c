@@ -57,6 +57,9 @@ union task_union {
 
 static union task_union init_task = {INIT_TASK,};
 
+/* add lab4 */
+extern struct tss_struct *tss = &(init_task.task.tss);
+
 long volatile jiffies=0;
 long startup_time=0;
 struct task_struct *current = &(init_task.task);
@@ -105,11 +108,13 @@ void schedule(void)
 {
 	int i,next,c;
 	struct task_struct ** p;
+	
+	/* add lab4 the init of the pnext is important. */
+	struct task_struct *pnext = &(init_task.task); 
 
-	struct task_struct *pnext;
 
 /* check alarm, wake up any interruptible tasks that have got a signal */
-
+	
 	for(p = &LAST_TASK ; p > &FIRST_TASK ; --p)
 		if (*p) {
 			if ((*p)->alarm && (*p)->alarm < jiffies) {
@@ -140,7 +145,9 @@ void schedule(void)
 				(*p)->counter = ((*p)->counter >> 1) +
 						(*p)->priority;
 	}
-	switch_to(pnext, LDT(next));
+
+	/* add lab4 */
+	switch_to(pnext, _LDT(next));
 }
 
 int sys_pause(void)
