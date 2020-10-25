@@ -49,7 +49,7 @@ state	= 0		# these are offsets into the task-struct.
 counter	= 4
 priority = 8
 
-# modified lab4 important
+# modified lab4, because I add kernelstack in front of signal in the task_struct(PCB).
 signal	= 16
 sigaction = 20		# MUST be 16 (=len of sigaction)
 blocked = (33*16+4)
