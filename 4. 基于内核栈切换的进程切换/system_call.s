@@ -333,8 +333,13 @@ switch_to:
     popl %ebx
     popl %ecx
     popl %ebp
-ret
-
+ret # 这个ret在第一次时，会运行下面的first_return_from_kernel
+	# 往后都会，返回到system_call
+# 只有第一次fork之后，从内核栈到用户栈返回是才会调用
+# 这个函数。往后返回是都会返回到reschedule，然后往下
+# 执行到ret_from_sys_call，返回用户态。
+# 看代码的时候，注意栈的变化。
+# 这里和copy_process一起构造成可以切换的样子。
 first_return_from_kernel:
 	popl %edx
 	popl %edi
