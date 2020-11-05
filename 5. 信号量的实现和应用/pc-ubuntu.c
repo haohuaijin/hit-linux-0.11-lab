@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <semaphore.h>
 #include <stdio.h>
+#include <sys/wait.h>
 
 #define NR_PROC 5
 #define MAX_NUMBER 500
