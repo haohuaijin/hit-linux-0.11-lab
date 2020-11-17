@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "__config": "c",
-        "locale": "c",
-        "cstdlib": "c",
-        "ostream": "c",
-        "new": "c"
-    }
-}
