@@ -9,6 +9,9 @@
 int sys_shmget(int key, size_t size, int shmflg);
 int sys_shmat(int shmid, const void *shmaddr, int shmflg);
 
+int allKey[20];
+void *allAddress[20];
+int countKey;
 /*
  * shmget() 会新建/打开一页内存，并返回该页共享内存的 shmid（该块共享内存在操作系统内部的 id）。
  * 所有使用同一块共享内存的进程都要使用相同的 key 参数。
@@ -17,9 +20,6 @@ int sys_shmat(int shmid, const void *shmaddr, int shmflg);
  * 如果系统无空闲内存，返回 -1，并置 errno 为 ENOMEM。
  * shmflg 参数可忽略。
  */
-int allKey[20];
-void *allAddress[20];
-int countKey;
 int sys_shmget(int key, size_t size, int shmflg){
     int i;
 
@@ -34,6 +34,7 @@ int sys_shmget(int key, size_t size, int shmflg){
 
     int tmp = get_free_page();
     if(tmp == 0){
+        printk("don't have page.\n");
         errno = ENOMEM;
         return -1;
     }
@@ -50,8 +51,8 @@ int sys_shmget(int key, size_t size, int shmflg){
  * shmaddr 和 shmflg 参数可忽略。
  */
 int sys_shmat(int shmid, const void *shmaddr, int shmflg){
-    unsigned long data_limit, data_base;
-	int i, j;
+    unsigned long data_limit, data_base, data;
+	int i;
     void * result;
 
     for(i=0; i<countKey; i++)
@@ -63,9 +64,13 @@ int sys_shmat(int shmid, const void *shmaddr, int shmflg){
 	data_limit = 0x4000000;
 	data_base = get_base(current->ldt[1]);
 
-    data_base += data_limit;
-    data_base -= PAGE_SIZE;
-    put_page(result, data_base);
-    
-    return result;
+    /*
+     * I don't know why he is work ,but it work.
+     * Because i don't find the data segment end, so i use this. 
+     */
+    data = data_base + data_limit;
+    data -= 10*PAGE_SIZE; 
+    put_page(result, data);
+    data -= data_base; 
+    return data;
 }

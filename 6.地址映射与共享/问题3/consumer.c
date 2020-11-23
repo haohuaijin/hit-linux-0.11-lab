@@ -22,23 +22,35 @@ int main(int argc, char * argv[]){
     sem_t* mutex = (sem_t*)sem_open("mutex", 1);
     sem_t* empty = (sem_t*)sem_open("empty", MAX_BUFFER);
 
-    int position, shmid;
+    int tmp, shmid;
+    int position = 0;
     int *data;
     int key = 9999;
-    int i;
 
     shmid = shmget(key, (MAX_BUFFER+1)*sizeof(int), 0);
     data = (int*)shmat(shmid, 0, 0);
-
-    for(i=0; i < MAX_NUMBER+1; i++){
-        sem_wait(empty);
+    /*
+    printf("the shmid is %d, the data is %x\n", shmid, data);
+    */
+    while(1){
+        sem_wait(full);
         sem_wait(mutex);
 
-        position = (i % MAX_BUFFER);
-        data[position] = i;
-
+        position = (position % MAX_BUFFER);
+        printf("%d: %d\n", getpid(), data[position]);
+        fflush(stdout);
+        if(data[position] == MAX_NUMBER){
+            sem_post(mutex);
+            sem_post(empty);
+            break;
+        }
+        position++;
+        
         sem_post(mutex);
-        sem_post(full);
+        sem_post(empty);
     }
+    sem_unlink("full");
+    sem_unlink("mutex");
+    sem_unlink("empty");
     return 0;
 }
