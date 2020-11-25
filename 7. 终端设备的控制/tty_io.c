@@ -25,6 +25,9 @@
 #include <asm/segment.h>
 #include <asm/system.h>
 
+/* lab 7 */
+#include <linux/mm.h>
+
 #define _L_FLAG(tty,f)	((tty)->termios.c_lflag & f)
 #define _I_FLAG(tty,f)	((tty)->termios.c_iflag & f)
 #define _O_FLAG(tty,f)	((tty)->termios.c_oflag & f)
@@ -328,6 +331,7 @@ int tty_write(unsigned channel, char * buf, int nr)
 			}
 			b++; nr--;
 			cr_flag = 0;
+			/* lab 7 */
 			if( ( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ) && Flag)
 				c = '*';
 			PUTCH(c,tty->write_q);

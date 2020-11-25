@@ -14,7 +14,7 @@
 
 .text
 .globl keyboard_interrupt
-.globl myfunc
+.globl myfunc /* lab 7 */
 
 /*
  * these are for the keyboard read functions
@@ -523,7 +523,7 @@ key_table:
 	.long cursor,cursor,do_self,cursor	/* 4C-4F n5 right + end */
 	.long cursor,cursor,cursor,cursor	/* 50-53 dn pgdn ins del */
 	.long none,none,do_self,func		/* 54-57 sysreq ? < f11 */
-	.long myfunc,none,none,none		/* 58-5B f12 ? ? ? */
+	.long myfunc,none,none,none		/* 58-5B f12 ? ? ? */ /* lab 7 */
 	.long none,none,none,none		/* 5C-5F ? ? ? ? */
 	.long none,none,none,none		/* 60-63 ? ? ? ? */
 	.long none,none,none,none		/* 64-67 ? ? ? ? */
