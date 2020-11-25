@@ -502,9 +502,9 @@ void con_write(struct tty_struct * tty)
 					lf();
 				else if (c=='Z')
 					respond(tty);
-				else if (x=='7')
+				else if (c=='7')
 					save_cur();
-				else if (x=='8')
+				else if (c=='8')
 					restore_cur();
 				break;
 			case 2:
