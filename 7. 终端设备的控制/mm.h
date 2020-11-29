@@ -7,6 +7,7 @@ extern unsigned long get_free_page(void);
 extern unsigned long put_page(unsigned long page,unsigned long address);
 extern void free_page(unsigned long addr);
 
+/* lab 7 */
 unsigned int Flag;
 
 #endif

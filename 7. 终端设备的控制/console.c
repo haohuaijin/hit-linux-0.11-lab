@@ -458,6 +458,7 @@ void con_write(struct tty_struct * tty)
 						pos -= video_size_row;
 						lf();
 					}
+					/* lab 7 */
 					if( ( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ) && Flag)
 						c = '*';
 					__asm__("movb attr,%%ah\n\t"
