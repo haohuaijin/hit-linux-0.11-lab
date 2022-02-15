@@ -3,7 +3,7 @@
 哈工大 李治军老师操作系统课试验环境以及lab答案
 
 ## 说明
-- linux-0.11代码：存放linux-0.11的源码，不过缺少kernel/chr_drv/keyboard.s文件(原因mac不区分大小写)；
+- linux-0.11代码：存放linux-0.11的源码，不过缺少kernel/chr_drv/keyboard.s文件;
 - 以x.开头：各个实验需要更改的文件；
 -  实验报告及笔记：各个实验的实验报告和一些笔记。
 
